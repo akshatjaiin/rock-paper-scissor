@@ -44,6 +44,9 @@ const paper_name = "3";
 const paper_name2 = "4";
 const scissior_name = "5";
 const scissior_name2 = "6";
+const tie = "7";
+const win = "8";
+const loss = "9";
 
 // assign bitmap art to each sprite
 setLegend(
@@ -217,6 +220,57 @@ LLLL.LLLL.L.LLLL
 ................
 ................
 ................`],
+[ tie, bitmap`
+00000000.....3.3
+....0.........3.
+....0........333
+....0...........
+....0...0.......
+....0...0.......
+....0...0.......
+....0...0..00000
+....0...0..0...0
+....0...0..0....
+........0..0....
+........0..000..
+...........0....
+...........0...0
+...........0...0
+...........00000`],
+[ win, bitmap`
+0.....0.........
+0.....0.....3..3
+0.....0.........
+0.....0.........
+0..0..00.0..3..3
+0..0..0000..3333
+0..0..0.00.....0
+0000000.0...0..0
+........0...00.0
+........0...00.0
+........0...00.0
+........0...0000
+.......0000.0.00
+......00..0.0.00
+............0..0
+............0..0`],
+[ loss, bitmap`
+0...............
+0...0000........
+0...0000.LLLL.2.
+0...0HH0.L..L...
+0...0HH0.L......
+0...0HH0.L...LLL
+0...0HH0.LLL.L.L
+0...0000...L.L..
+0..........L.L..
+0000....L..L.LLL
+........L.LL...L
+........LLLL...L
+...............L
+............L..L
+............LLLL
+................`],
 );
 
 let playerchoice = 'p';
@@ -260,32 +314,66 @@ onInput("j", () => {
   console.log(playerchoice);
   let winner = determineWinner(guess, playerchoice);
   if (winner === 0) {
-    // print loss on screen
+    level = 1;
+    
   } else if (winner === 1) {
-    // print you win on screen
+    level = 2;// print you win on screen
   } else {
-    // print tie
+    level = 3;// print tie
   }
 });
 
 
-
+let level = 0;
 setSolids([rock, paper, scissor]);
 
-let level = 0
+
 const levels = [
 map`
 .123456
 .......
 .r.p.s.
 ...w...
-.......`
+.......`,
+map`
+.123456
+.......
+.r.p.s.
+...9...
+.......`,
+map`
+.123456
+.......
+.r.p.s.
+...8...
+.......`,
+map`
+.123456
+.......
+.r.p.s.
+...7...
+.......`,
+  
 ]
 
 setMap(levels[level])
 
 
 
+
+// Enter key
+onInput("j", () => {
+  console.log(playerchoice);
+  let winner = determineWinner(guess, playerchoice);
+  if (winner === 0) {
+    level = 1;
+    
+  } else if (winner === 1) {
+    level = 2;// print you win on screen
+  } else {
+    level = 3;// print tie
+  }
+});
 
 afterInput(() => {
 
