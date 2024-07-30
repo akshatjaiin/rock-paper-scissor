@@ -16,18 +16,18 @@ function getComputerChoice() {
 // Function to determine the winner
 function determineWinner(playerChoice, computerChoice) {
   if (playerChoice === computerChoice) {
-      console.log('It\'s a tie!');
+      //console.log('It\'s a tie!');
     return 2;
   }
   if (
-      (playerChoice === 'r' && computerChoice === 's') ||
+        (playerChoice === 'r' && computerChoice === 's') ||
       (playerChoice === 'p' && computerChoice === 'r') ||
       (playerChoice === 's' && computerChoice === 'p')
   ) {
-      console.log('You win!');
+      ////console.log('You win!');
     return 1;
   }
-  console.log('com win!');
+//console.log('com win!');
 return 0;
 }
 
@@ -273,7 +273,7 @@ LLLL.LLLL.L.LLLL
 ................`],
 );
 
-let playerchoice = 'p';
+let playerchoice = guess;
 // Function for movement when 's' or 'ArrowLeft' key is pressed
 function moveLeft() {
   const sprite = getFirst(slider);
@@ -321,7 +321,7 @@ map`
 .123456
 .......
 .r.p.s.
-...8...
+...7...
 .......`,
 map`
 .123456
@@ -345,38 +345,37 @@ onInput("w", moveLeft);
 onInput("d", moveRight);
 onInput("s", moveRight);
 
+addText(guess, {x:1, y:2, color:color`3`});
 
-
-// Restart
-addText("Press J to Restart ", {x:1, y:2, color:color`3`});
-
-onInput("j", () => {
-  setMap(levels[level])
+// Choose
+addText("Press J to Enter ", {x:1, y:4, color:color`3`});
+onInput("j", () => {  
+  if (winner === 0) {
+    level = 1;
+  addText("Computer Win", {x:1, y:2, color:color`3`});
+  } 
+  else if (winner === 1) {
+    level = 2;// print you win on screen
+    addText("You Win", {x:1, y:2, color:color`3`});
+  } 
+  else if (winner === 2){
+    level = 3;// print tie
+    addText("Tie ", {x:1, y:2, color:color`3`});
+  }
+  setMap(levels[level]);
+  addText("Press K to restart ", {x:1, y:2, color:color`3`});
 });
 
-
+//restart
+onInput("k", () => {
+  setMap(levels[0]);
+  clearText()
+});
+  
 
 let winner = determineWinner(guess, playerchoice);
 
 
 afterInput(() => {
-  console.log(playerchoice);
-  clearText();
-  level = 1;
-  if (winner === 0) {
-  addText("You LOST", {x:1, y:2, color:color`3`});
-      setMap(levels[level])
-    
-    
-  } else if (winner === 1) {
-    level = 2;// print you win on screen
-    addText("You Win", {x:1, y:2, color:color`3`});
-      setMap(levels[level]);
 
-  } else {
-    level = 3;// print tie
-    addText("Tie ", {x:1, y:2, color:color`3`});
-      setMap(levels[level]);
-
-  }
 })
