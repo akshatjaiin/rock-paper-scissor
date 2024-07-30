@@ -7,9 +7,31 @@ https://sprig.hackclub.com/gallery/getting_started
 @tags: []
 @addedOn: 2024-00-00
 */
+
+// Create a tune:
+const melody = tune`
+3000,
+500: E4~500,
+7000,
+500: D5~500,
+500,
+500: E4~500,
+2000,
+500: C5~500,
+1500`
+
+// Play it:
+playTune(melody).end()
+
+
 function getComputerChoice() {
-  const choices = ['r', 'p', 's'];
+  const choices = ['rock', 'paper', 'scissor'];
   const randomIndex = Math.floor(Math.random() * choices.length);
+  for (let i = 0; i < 3; i++) {
+    let c = choices[i];
+    addText(c, {x:1, y:2, color:color`3`});
+  }
+  addText(choices[randomIndex], {x:1, y:2, color:color`3`});
   return choices[randomIndex];
 }
 
@@ -20,9 +42,9 @@ function determineWinner(playerChoice, computerChoice) {
     return 2;
   }
   if (
-        (playerChoice === 'r' && computerChoice === 's') ||
-      (playerChoice === 'p' && computerChoice === 'r') ||
-      (playerChoice === 's' && computerChoice === 'p')
+        (playerChoice === 'rock' && computerChoice === 'scissor') ||
+      (playerChoice === 'paper' && computerChoice === 'rock') ||
+      (playerChoice === 'scissor' && computerChoice === 'paper')
   ) {
       ////console.log('You win!');
     return 1;
@@ -31,7 +53,7 @@ function determineWinner(playerChoice, computerChoice) {
 return 0;
 }
 
-let guess = getComputerChoice();
+
 
 // define the sprites in our game
 const rock = "r";
@@ -310,15 +332,15 @@ function moveLeft() {
 
 
 // Function to move slider
-function moveSlider2() {
-  const sprite2 = getFirst(slider2);
-  for(let i = 1, sprite2 = getFirst(slider2); i < 7; i++){
-     sprite2.x += 1;
-    if (sprite2.x === width()) {
-    sprite2.x = 1; // move sprite right
-  }
-  }
-};
+// function moveSlider2() {
+//   const sprite2 = getFirst(slider2);
+//   for(let i = 1, sprite2 = getFirst(slider2); i < 7; i++){
+//      sprite2.x += 1;
+//     if (sprite2.x === width()) {
+//     sprite2.x = 1; // move sprite right
+//   }
+//   }
+// };
 // Function for movement when 'd' or 'ArrowRight' key is pressed
 function moveRight() {
   const sprite = getFirst(slider);
@@ -385,9 +407,11 @@ addText("Press s for right ", {x:2, y:3, color:color`3`});
 addText("Press d for left ", {x:2, y:4, color:color`3`});
 addText("Press J to Select ", {x:2, y:13, color:color`3`});
 }
+let guess = getComputerChoice();
 
 // enter
 onInput("j", () => {
+  
   let winner = determineWinner(playerchoice, guess);
   if (winner == 0) {
     level = 1;
@@ -420,15 +444,15 @@ afterInput(() => {
     if (sprite) {
         // Check the position of the slider and update playerchoice accordingly
         if (sprite.x === 1) {
-            playerchoice = 'r';
+            playerchoice = 'rock';
             clearText();
             print();
         } else if (sprite.x === 3) {
-            playerchoice = 'p';
+            playerchoice = 'paper';
             clearText();
             print();
         } else if (sprite.x === 5) {
-            playerchoice = 's';
+            playerchoice = 'scissor';
             clearText();
             print();
         }
