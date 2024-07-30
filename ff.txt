@@ -8,27 +8,27 @@ https://sprig.hackclub.com/gallery/getting_started
 @addedOn: 2024-00-00
 */
 function getComputerChoice() {
-  const choices = ['r', 'p', 's'];
-  const randomIndex = Math.floor(Math.random() * choices.length);
-  return choices[randomIndex];
+    const choices = ['r', 'p', 's'];
+    const randomIndex = Math.floor(Math.random() * choices.length);
+    return choices[randomIndex];
 }
 
 // Function to determine the winner
 function determineWinner(playerChoice, computerChoice) {
-  if (playerChoice === computerChoice) {
-      console.log('It\'s a tie!');
-    return 2;
-  }
-  if (
-      (playerChoice === 'r' && computerChoice === 's') ||
-      (playerChoice === 'p' && computerChoice === 'r') ||
-      (playerChoice === 's' && computerChoice === 'p')
-  ) {
-      console.log('You win!');
-    return 1;
-  }
-  console.log('com win!');
-return 0;
+    if (playerChoice === computerChoice) {
+        console.log('It\'s a tie!');
+      return 2;
+    }
+    if (
+        (playerChoice === 'r' && computerChoice === 's') ||
+        (playerChoice === 'p' && computerChoice === 'r') ||
+        (playerChoice === 's' && computerChoice === 'p')
+    ) {
+        console.log('You win!');
+      return 1;
+    }
+    console.log('com win!');
+  return 0;
 }
 
 const guess = getComputerChoice();
@@ -47,7 +47,7 @@ const scissior_name2 = "sn2";
 
 // assign bitmap art to each sprite
 setLegend(
-[ rock, bitmap`
+  [ rock, bitmap`
 ................
 ................
 ................
@@ -64,7 +64,7 @@ setLegend(
 ...C............
 ................
 ................`],
-[ paper, bitmap`
+  [ paper, bitmap`
 ................
 ................
 ................
@@ -81,7 +81,7 @@ setLegend(
 ...88888888888..
 ................
 ................`],
-[ scissor, bitmap`
+  [ scissor, bitmap`
 ................
 ...1........1...
 ....1......1....
@@ -98,7 +98,7 @@ setLegend(
 ...11111........
 ................
 ................`],
-[ slider, bitmap`
+  [ slider, bitmap`
 ................
 ................
 ................
@@ -115,7 +115,7 @@ LLLLLLLLLLLLLLLL
 ................
 ................
 ................`],
-[ rock_name, bitmap`
+  [ rock_name, bitmap`
 ................
 ................
 LLLL.LLLL.LLL.L.
@@ -132,7 +132,7 @@ L..L.LLLL.LLL.L.
 ................
 ................
 ................`],
-[ rock_name2, bitmap`
+  [ rock_name2, bitmap`
 ................
 ................
 .L..............
@@ -149,7 +149,7 @@ L...............
 ................
 ................
 ................`],
-[ paper_name, bitmap`
+  [ paper_name, bitmap`
 ................
 ................
 .111..111...111.
@@ -166,7 +166,7 @@ L...............
 ................
 ................
 ................`],
-[ paper_name2, bitmap`
+  [ paper_name2, bitmap`
 ................
 ................
 .L..............
@@ -183,7 +183,7 @@ L...............
 ................
 ................
 ................`],
-[ scissior_name, bitmap`
+  [ scissior_name, bitmap`
 ................
 ................
 .L..............
@@ -200,7 +200,7 @@ L...............
 ................
 ................
 ................`],
-[ scissior_name2, bitmap`
+  [ scissior_name2, bitmap`
 ................
 ................
 .L..............
@@ -223,31 +223,31 @@ let playerchoice = 'r';
 let center = getFirst(slider).x
 // inputs for player movement control
 onInput("s", () => {
-getFirst(slider).x -= 2;// move slider left
-playerchoice = 'r';
+  getFirst(slider).x -= 2;// move slider left
+  playerchoice = 'r';
 });
 
 onInput("d", () => {
-getFirst(slider).x += 2; //move it 
-playerchoice = 's';
+  getFirst(slider).x += 2; //move it 
+  playerchoice = 's';
 });
 
 // enter
 onInput("j", () => {
-console.log(playerchoice);
-let winner = determineWinner(guess, playerchoice);
-if(winner === 0)
-{
-  //print loss on screen
-}
-else if (winner === 1)
-{
-  //print you win on screen
-}
-else {
-  //print tie
+  console.log(playerchoice);
+  let winner = determineWinner(guess, playerchoice);
+  if(winner === 0)
+  {
+    //print loss on screen
+  }
+  else if (winner === 1)
+  {
+    //print you win on screen
+  }
+  else {
+    //print tie
 
-}
+  }
 });
 
 
@@ -256,7 +256,7 @@ setSolids([rock, paper, scissor]);
 
 let level = 0
 const levels = [
-map`
+  map`
 .....................
 .r.p.s.
 ...w...
@@ -269,5 +269,5 @@ setMap(levels[level])
 
 
 afterInput(() => {
-
+  
 })
