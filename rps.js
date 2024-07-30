@@ -299,30 +299,6 @@ function moveRight() {
 }
 
 
-// Inputs for player movement control
-onInput("a", moveLeft);
-onInput("w", moveLeft);
-
-
-onInput("d", moveRight);
-onInput("s", moveRight);
-
-
-
-// Enter key
-onInput("j", () => {
-  console.log(playerchoice);
-  let winner = determineWinner(guess, playerchoice);
-  if (winner === 0) {
-    level = 1;
-    
-  } else if (winner === 1) {
-    level = 2;// print you win on screen
-  } else {
-    level = 3;// print tie
-  }
-});
-
 
 let level = 0;
 setSolids([rock, paper, scissor]);
@@ -361,20 +337,46 @@ setMap(levels[level])
 
 
 
-// Enter key
+// Inputs for player movement control
+onInput("a", moveLeft);
+onInput("w", moveLeft);
+
+
+onInput("d", moveRight);
+onInput("s", moveRight);
+
+
+
+// Restart
+addText("Press J to Restart ", {x:1, y:2, color:color`3`});
+
 onInput("j", () => {
+  setMap(levels[level])
+});
+
+
+
+let winner = determineWinner(guess, playerchoice);
+
+
+afterInput(() => {
   console.log(playerchoice);
-  let winner = determineWinner(guess, playerchoice);
+  clearText();
+  level = 1;
   if (winner === 0) {
-    level = 1;
+  addText("You LOST", {x:1, y:2, color:color`3`});
+      setMap(levels[level])
+    
     
   } else if (winner === 1) {
     level = 2;// print you win on screen
+    addText("You Win", {x:1, y:2, color:color`3`});
+      setMap(levels[level]);
+
   } else {
     level = 3;// print tie
+    addText("Tie ", {x:1, y:2, color:color`3`});
+      setMap(levels[level]);
+
   }
-});
-
-afterInput(() => {
-
 })
