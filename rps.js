@@ -31,7 +31,7 @@ function determineWinner(playerChoice, computerChoice) {
 return 0;
 }
 
-const guess = getComputerChoice();
+let guess = getComputerChoice();
 
 // define the sprites in our game
 const rock = "r";
@@ -273,7 +273,7 @@ LLLL.LLLL.L.LLLL
 ................`],
 );
 
-let playerchoice = guess;
+let playerchoice = "p";
 // Function for movement when 's' or 'ArrowLeft' key is pressed
 function moveLeft() {
   const sprite = getFirst(slider);
@@ -297,7 +297,10 @@ function moveRight() {
     playerchoice = 's';
   }
 }
-
+function print() {
+  addText(guess, {x:1, y:2, color:color`3`});
+  addText(playerchoice, {x:1, y:3, color:color`3`});
+}
 
 
 let level = 0;
@@ -321,7 +324,7 @@ map`
 .123456
 .......
 .r.p.s.
-...7...
+...8...
 .......`,
 map`
 .123456
@@ -345,22 +348,23 @@ onInput("w", moveLeft);
 onInput("d", moveRight);
 onInput("s", moveRight);
 
-addText(guess, {x:1, y:2, color:color`3`});
+
 
 // Choose
 addText("Press J to Enter ", {x:1, y:4, color:color`3`});
-onInput("j", () => {  
-  if (winner === 0) {
+onInput("j", () => {
+  let winner = determineWinner(guess, playerchoice);
+  if (winner == 0) {
     level = 1;
-  addText("Computer Win", {x:1, y:2, color:color`3`});
+  addText("Computer Win", {x:1, y:7, color:color`3`});
   } 
-  else if (winner === 1) {
+  else if (winner == 1) {
     level = 2;// print you win on screen
-    addText("You Win", {x:1, y:2, color:color`3`});
+    addText("You Win", {x:1, y:8, color:color`3`});
   } 
-  else if (winner === 2){
+  else if (winner == 2){
     level = 3;// print tie
-    addText("Tie ", {x:1, y:2, color:color`3`});
+    addText("Tie ", {x:1, y:9, color:color`3`});
   }
   setMap(levels[level]);
   addText("Press K to restart ", {x:1, y:2, color:color`3`});
@@ -368,14 +372,13 @@ onInput("j", () => {
 
 //restart
 onInput("k", () => {
+  guess = getComputerChoice();
   setMap(levels[0]);
-  clearText()
 });
   
 
-let winner = determineWinner(guess, playerchoice);
 
 
 afterInput(() => {
-
+addText(guess, {x:1, y:1, color:color`3`});
 })
