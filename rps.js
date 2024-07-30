@@ -306,30 +306,19 @@ function moveLeft() {
     print()
   }
 }
-let direction = 1; // Initialize direction of movement (1 for right, -1 for left)
-const maxPositionSlider2 = width() - 1; // Set the maximum position of slider2
 
-// Function for continuous movement of slider2
+
+
+// Function to move slider
 function moveSlider2() {
-    const spriteSlider2 = getFirst(slider2);
-
-    if (spriteSlider2) {
-        // Check if slider2 reaches the boundary, change direction if necessary
-        if (spriteSlider2.x + direction >= maxPositionSlider2) {
-            direction = -1; // Change direction to move left
-        } else if (spriteSlider2.x + direction < 0) {
-            direction = 1; // Change direction to move right
-        }
-
-        // Move the slider2 sprite based on the current direction
-        spriteSlider2.x += direction;
-
-        // Implement any other logic related to slider2 movement here
-    }
-}
-// Call moveSlider2 function in a loop for continuous movement
-let intervalId = setInterval(moveSlider2, 900); // Adjust the interval as needed (100ms in this example)
-
+  const sprite2 = getFirst(slider2);
+  for(let i = 1, sprite2 = getFirst(slider2); i < 7; i++){
+     sprite2.x += 1;
+    if (sprite2.x === width()) {
+    sprite2.x = 1; // move sprite right
+  }
+  }
+};
 // Function for movement when 'd' or 'ArrowRight' key is pressed
 function moveRight() {
   const sprite = getFirst(slider);
@@ -381,8 +370,7 @@ map`
 ]
 
 setMap(levels[level])
-
-
+instructions();
 
 
 // Inputs for player movement control
