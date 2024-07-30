@@ -47,6 +47,7 @@ const scissior_name2 = "6";
 const tie = "7";
 const win = "8";
 const loss = "9";
+const slider2 = "a";
 
 // assign bitmap art to each sprite
 setLegend(
@@ -118,6 +119,23 @@ LLLLLLLLLLLLLLLL
 ................
 ................
 ................`],
+[ slider2, bitmap`
+................
+................
+................
+0000000000000000
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................
+................`],  
 [ rock_name, bitmap`
 ................
 ................
@@ -271,8 +289,9 @@ LLLL.LLLL.L.LLLL
 ............L..L
 ............LLLL
 ................`],
+  
 );
-
+const sprite = getFirst(slider);
 let playerchoice = "p";
 // Function for movement when 's' or 'ArrowLeft' key is pressed
 function moveLeft() {
@@ -283,8 +302,33 @@ function moveLeft() {
   if (sprite.x - 2 >= minPosition) {
     sprite.x -= 2; // move sprite left
     playerchoice = 'r';
+    clearText();
+    print()
   }
 }
+let direction = 1; // Initialize direction of movement (1 for right, -1 for left)
+const maxPositionSlider2 = width() - 1; // Set the maximum position of slider2
+
+// Function for continuous movement of slider2
+function moveSlider2() {
+    const spriteSlider2 = getFirst(slider2);
+
+    if (spriteSlider2) {
+        // Check if slider2 reaches the boundary, change direction if necessary
+        if (spriteSlider2.x + direction >= maxPositionSlider2) {
+            direction = -1; // Change direction to move left
+        } else if (spriteSlider2.x + direction < 0) {
+            direction = 1; // Change direction to move right
+        }
+
+        // Move the slider2 sprite based on the current direction
+        spriteSlider2.x += direction;
+
+        // Implement any other logic related to slider2 movement here
+    }
+}
+// Call moveSlider2 function in a loop for continuous movement
+let intervalId = setInterval(moveSlider2, 900); // Adjust the interval as needed (100ms in this example)
 
 // Function for movement when 'd' or 'ArrowRight' key is pressed
 function moveRight() {
@@ -297,6 +341,7 @@ function moveRight() {
     playerchoice = 's';
   }
 }
+
 function print() {
   addText(guess, {x:1, y:2, color:color`3`});
   addText(playerchoice, {x:1, y:3, color:color`3`});
@@ -310,7 +355,7 @@ setSolids([rock, paper, scissor]);
 const levels = [
 map`
 .123456
-.......
+.a.....
 .r.p.s.
 ...w...
 .......`,
@@ -344,16 +389,18 @@ setMap(levels[level])
 onInput("a", moveLeft);
 onInput("w", moveLeft);
 
-
 onInput("d", moveRight);
 onInput("s", moveRight);
 
+function instructions() {
+addText("Press s for right ", {x:2, y:3, color:color`3`});
+addText("Press d for left ", {x:2, y:4, color:color`3`});
+addText("Press J to Select ", {x:2, y:13, color:color`3`});
+}
 
-
-// Choose
-addText("Press J to Enter ", {x:1, y:4, color:color`3`});
+// enter
 onInput("j", () => {
-  let winner = determineWinner(guess, playerchoice);
+  let winner = determineWinner(playerchoice, guess);
   if (winner == 0) {
     level = 1;
   addText("Computer Win", {x:1, y:7, color:color`3`});
@@ -364,10 +411,10 @@ onInput("j", () => {
   } 
   else if (winner == 2){
     level = 3;// print tie
-    addText("Tie ", {x:1, y:9, color:color`3`});
+    addText("Tie ", {x:3, y:9, color:color`3`});
   }
   setMap(levels[level]);
-  addText("Press K to restart ", {x:1, y:2, color:color`3`});
+  addText("Press K to restart ", {x:1, y:4, color:color`3`});
 });
 
 //restart
@@ -378,7 +425,26 @@ onInput("k", () => {
   
 
 
-
 afterInput(() => {
-addText(guess, {x:1, y:1, color:color`3`});
-})
+    const sprite = getFirst(slider);
+
+    // Check if 'sprite' is defined before accessing its properties
+    if (sprite) {
+        // Check the position of the slider and update playerchoice accordingly
+        if (sprite.x === 1) {
+            playerchoice = 'r';
+            clearText();
+            print();
+        } else if (sprite.x === 3) {
+            playerchoice = 'p';
+            clearText();
+            print();
+        } else if (sprite.x === 5) {
+            playerchoice = 's';
+            clearText();
+            print();
+        }
+    } else {
+        console.log("Slider sprite is undefined.");
+    }
+});
