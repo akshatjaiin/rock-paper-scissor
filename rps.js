@@ -1,38 +1,31 @@
 /*
 @title: Rock Paper Scissor
-@author: yash
 */
 
-// Create a tune:
-const melody = tune`
-3000,
-500: E4~500,
-7000,
-500: D5~500,
-500,
-500: E4~500,
-2000,
-500: C5~500,
-1500`
 
-// Play it:
-playTune(melody).end()
-
-function getComputerChoice() {
+let currentChoice;
+function getComputerChoice(playerChoice) {
   const choices = ['rock', 'paper', 'scissors'];
   const flickerCount = 8;
-  let currentChoice;
-
+  
   return new Promise((resolve) => {
     for (let i = 0; i < flickerCount; i++) {
       setTimeout(() => {
         currentChoice = choices[Math.floor(Math.random() * choices.length)];
-        console.log("Flickering choice:", currentChoice); // Display the flickering choice
-
+         // Display the flickering 
+        clearText()
+        addText(currentChoice, {x:10, y:5, color:color`3`});      
+        addText(playerchoice, {x:1, y:3, color:color`L`});
+        addText("vs", {x:10, y:4, color:color`D`});
+        
         // On the last iteration, resolve the promise with the final choice
         if (i === flickerCount - 1) {
-          console.log("Final choice:", currentChoice); // Display the final choice
-          resolve(currentChoice);
+          //console.log("Final choice:", currentChoice); // Display the final choice
+          clearText()
+        addText(currentChoice, {x:10, y:5, color:color`3`});      
+        addText(playerchoice, {x:1, y:3, color:color`3`});
+        
+        resolve(currentChoice);
         }
       }, 300 * i); // Increment the delay for each iteration
     }
@@ -41,9 +34,10 @@ function getComputerChoice() {
 
 // Function to determine the winner
 async function determineWinner(playerChoice) {
-  const computerChoice = await getComputerChoice(); // Await the promise
-  console.log("Player choice:", playerChoice);
-  console.log("Computer choice:", computerChoice);
+  const computerChoice = await getComputerChoice(playerChoice); // Await the promise
+  
+  addText(currentChoice, {x:10, y:5, color:color`3`});
+  addText(playerchoice, {x:1, y:3, color:color`3`});
   
   if (playerChoice === computerChoice) {
     level = 3; // Print tie
@@ -54,13 +48,18 @@ async function determineWinner(playerChoice) {
     (playerChoice === 'scissors' && computerChoice === 'paper')
   ) {
     level = 2; // Print you win on screen
-    addText("You Win", {x: 1, y: 8, color: color`3`});
   } else {
     level = 1; // Print computer wins on screen
-    addText("Computer Wins", {x: 1, y: 7, color: color`3`});
-  }
+    }
   setMap(levels[level]);
-  addText("Press K to restart", {x: 1, y: 5, color: color`3`});
+  // Create a tune:
+    const melody = tune`
+37.92667509481669: B5-37.92667509481669 + A5~37.92667509481669 + G5^37.92667509481669 + F5/37.92667509481669,
+1175.7269279393172`
+
+// Play it:
+    playTune(melody)
+  addText("press k to restart", {x:1, y:13, color:color`3`});
   return 0;
 }
 
@@ -75,13 +74,11 @@ function moveRight() {
 }
 
 function print() {
-  addText(guess, {x:10, y:4, color:color`3`});
-  addText(playerchoice, {x:1, y:3, color:color`3`});
 }
 
 function instructions() {
 addText("Press s for right ", {x:2, y:3, color:color`3`});
-addText("Press d for left ", {x:2, y:4, color:color`3`});
+addText("Press a for left ", {x:2, y:4, color:color`3`});
 addText("Press J to Select ", {x:2, y:13, color:color`3`});
 }
 
@@ -121,22 +118,22 @@ setLegend(
 ................
 ................`],
 [ paper, bitmap`
-................
-................
-................
-...88888888888..
-...82222222228..
-...82222222228..
-...82222222228..
-...82222222228..
-...82222222228..
-...82222222228..
-...82222222228..
-...82222222228..
-...82222222228..
-...88888888888..
-................
-................`],
+1111111111111111
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1222222222222221
+1111111111111111`],
 [ scissor, bitmap`
 ................
 ...1........1...
@@ -344,7 +341,6 @@ LLLL.LLLL.L.LLLL
 );
 
 let playerchoice = 'paper';
-
 let level = 0;
 setSolids([rock, paper, scissor]);
 
@@ -387,46 +383,38 @@ onInput("s", moveRight);
 
 // enter
 onInput("j", () => {
-  determineWinner(playerchoice);
+  if (level == 0) {
+  determineWinner(playerchoice); }
+  
 });
-
 
 //restart
 onInput("k", () => {
-  setMap(levels[0]);
-});
+  level = 0;
+  setMap(levels[level]);
   
+});
 
 
 afterInput(() => {
+      const move = tune`
+37.5: C5~37.5 + D5~37.5,
+1162.5`
+
+// Play it:
+    playTune(move)
+  
     const sprite = getFirst(slider);
     if (sprite) {
+        clearText()
         // Check the position of the slider and update playerchoice accordingly
         if (sprite.x === 1) {
             playerchoice = 'rock';
-            clearText();
-            print();
         } else if (sprite.x === 3) {
             playerchoice = 'paper';
-            clearText();
-            print();
         } else if (sprite.x === 5) {
-            playerchoice = 'scissor';
-            clearText();
-            print();
+            playerchoice = 'scissors';
         }
-    } else {
-        console.log("Slider sprite is undefined.");
     }
+  addText(playerchoice, {x:1, y:3, color:color`3`});
 });
-
-// Function to move slider
-// function moveSlider2() {
-//   const sprite2 = getFirst(slider2);
-//   for(let i = 1, sprite2 = getFirst(slider2); i < 7; i++){
-//      sprite2.x += 1;
-//     if (sprite2.x === width()) {
-//     sprite2.x = 1; // move sprite right
-//   }
-//   }
-// };
