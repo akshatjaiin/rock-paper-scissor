@@ -1,7 +1,4 @@
 /*
-First time? Check out the tutorial game:
-https://sprig.hackclub.com/gallery/getting_started
-
 @title: Rock Paper Scissor
 @author: yash
 @tags: []
@@ -23,36 +20,33 @@ const melody = tune`
 // Play it:
 playTune(melody).end()
 
-
 function getComputerChoice() {
   const choices = ['rock', 'paper', 'scissor'];
   const randomIndex = Math.floor(Math.random() * choices.length);
-  for (let i = 0; i < 3; i++) {
-    let c = choices[i];
-    addText(c, {x:1, y:2, color:color`3`});
-  }
-  addText(choices[randomIndex], {x:1, y:2, color:color`3`});
   return choices[randomIndex];
 }
 
 // Function to determine the winner
 function determineWinner(playerChoice, computerChoice) {
   if (playerChoice === computerChoice) {
-      //console.log('It\'s a tie!');
-    return 2;
+    level = 3;// print tie
+    addText("Tie ", {x:3, y:9, color:color`3`});
   }
-  if (
+  else if (
         (playerChoice === 'rock' && computerChoice === 'scissor') ||
       (playerChoice === 'paper' && computerChoice === 'rock') ||
-      (playerChoice === 'scissor' && computerChoice === 'paper')
-  ) {
-      ////console.log('You win!');
-    return 1;
+      (playerChoice === 'scissor' && computerChoice === 'paper')) {
+    level = 2;// print you win on screen
+    addText("You Win", {x:1, y:8, color:color`3`});
   }
-//console.log('com win!');
+  else{
+    level = 1;
+    addText("Computer Win", {x:1, y:7, color:color`3`});
+  }
+  setMap(levels[level]);
+  addText("Press K to restart ", {x:1, y:4, color:color`3`});
 return 0;
 }
-
 
 
 // define the sprites in our game
@@ -310,47 +304,16 @@ LLLL.LLLL.L.LLLL
 ...............L
 ............L..L
 ............LLLL
-................`],
-  
+................`],  
 );
-const sprite = getFirst(slider);
-let playerchoice = "p";
-// Function for movement when 's' or 'ArrowLeft' key is pressed
-function moveLeft() {
+
+function moveLeft() { // Function for movement when 's' or 'd' key is pressed
   const sprite = getFirst(slider);
-  const minPosition = 0; // Assuming the minimum x-coordinate position
-
-  // Check if moving left will exceed the border
-  if (sprite.x - 2 >= minPosition) {
     sprite.x -= 2; // move sprite left
-    playerchoice = 'r';
-    clearText();
-    print()
-  }
 }
-
-
-
-// Function to move slider
-// function moveSlider2() {
-//   const sprite2 = getFirst(slider2);
-//   for(let i = 1, sprite2 = getFirst(slider2); i < 7; i++){
-//      sprite2.x += 1;
-//     if (sprite2.x === width()) {
-//     sprite2.x = 1; // move sprite right
-//   }
-//   }
-// };
-// Function for movement when 'd' or 'ArrowRight' key is pressed
 function moveRight() {
   const sprite = getFirst(slider);
-  const maxPosition = width() - 1; // Assuming the width of the game screen
-
-  // Check if moving right will exceed the border
-  if (sprite.x + 2 <= maxPosition) {
-    sprite.x += 2; // move sprite right
-    playerchoice = 's';
-  }
+  sprite.x += 2; // move sprite right
 }
 
 function print() {
@@ -358,10 +321,29 @@ function print() {
   addText(playerchoice, {x:1, y:3, color:color`3`});
 }
 
+function instructions() {
+addText("Press s for right ", {x:2, y:3, color:color`3`});
+addText("Press d for left ", {x:2, y:4, color:color`3`});
+addText("Press J to Select ", {x:2, y:13, color:color`3`});
+}
+
+let playerchoice = 'paper';
+let flickerCount = 0; // Initialize a variable to track the flickering count
+// Flicker the computer's choice before displaying the final choice
+function flickerComputerChoice() {
+  if (flickerCount < 10) { // Flicker 4 times before final choice
+    setTimeout(() => {
+      guess = getComputerChoice(); // Update the guess with a new random choice
+      print(); // Display the flickering choice
+      flickerCount++;
+      flickerComputerChoice(); // Recursively flicker until flickerCount reaches 4
+    }, 500); // Set a delay between flickers (500ms)
+  }
+}
+
 
 let level = 0;
 setSolids([rock, paper, scissor]);
-
 
 const levels = [
 map`
@@ -388,12 +370,10 @@ map`
 .r.p.s.
 ...7...
 .......`,
-  
 ]
 
 setMap(levels[level])
 instructions();
-
 
 // Inputs for player movement control
 onInput("a", moveLeft);
@@ -402,32 +382,13 @@ onInput("w", moveLeft);
 onInput("d", moveRight);
 onInput("s", moveRight);
 
-function instructions() {
-addText("Press s for right ", {x:2, y:3, color:color`3`});
-addText("Press d for left ", {x:2, y:4, color:color`3`});
-addText("Press J to Select ", {x:2, y:13, color:color`3`});
-}
-let guess = getComputerChoice();
-
 // enter
 onInput("j", () => {
-  
-  let winner = determineWinner(playerchoice, guess);
-  if (winner == 0) {
-    level = 1;
-  addText("Computer Win", {x:1, y:7, color:color`3`});
-  } 
-  else if (winner == 1) {
-    level = 2;// print you win on screen
-    addText("You Win", {x:1, y:8, color:color`3`});
-  } 
-  else if (winner == 2){
-    level = 3;// print tie
-    addText("Tie ", {x:3, y:9, color:color`3`});
-  }
-  setMap(levels[level]);
-  addText("Press K to restart ", {x:1, y:4, color:color`3`});
+    flickerCount = 0; // Reset the flicker count
+    flickerComputerChoice(); // Start the flickering effect
+  determineWinner(playerchoice, guess);
 });
+
 
 //restart
 onInput("k", () => {
@@ -439,8 +400,6 @@ onInput("k", () => {
 
 afterInput(() => {
     const sprite = getFirst(slider);
-
-    // Check if 'sprite' is defined before accessing its properties
     if (sprite) {
         // Check the position of the slider and update playerchoice accordingly
         if (sprite.x === 1) {
@@ -460,3 +419,14 @@ afterInput(() => {
         console.log("Slider sprite is undefined.");
     }
 });
+
+// Function to move slider
+// function moveSlider2() {
+//   const sprite2 = getFirst(slider2);
+//   for(let i = 1, sprite2 = getFirst(slider2); i < 7; i++){
+//      sprite2.x += 1;
+//     if (sprite2.x === width()) {
+//     sprite2.x = 1; // move sprite right
+//   }
+//   }
+// };
