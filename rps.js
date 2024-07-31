@@ -1,9 +1,6 @@
-/*
-@title: Rock Paper Scissor
-*/
+// Rock Paper Scissors For sprig
 
-
-let currentChoice;
+let currentChoice; // make a guess by computer
 function getComputerChoice(playerChoice) {
   const choices = ['rock', 'paper', 'scissors'];
   const flickerCount = 8;
@@ -15,7 +12,7 @@ function getComputerChoice(playerChoice) {
          // Display the flickering 
         clearText()
         addText(currentChoice, {x:10, y:5, color:color`3`});      
-        addText(playerchoice, {x:1, y:3, color:color`L`});
+        addText(playerChoice, {x:1, y:3, color:color`L`});
         addText("vs", {x:10, y:4, color:color`D`});
         
         // On the last iteration, resolve the promise with the final choice
@@ -23,7 +20,7 @@ function getComputerChoice(playerChoice) {
           //console.log("Final choice:", currentChoice); // Display the final choice
           clearText()
         addText(currentChoice, {x:10, y:5, color:color`3`});      
-        addText(playerchoice, {x:1, y:3, color:color`3`});
+        addText(playerChoice, {x:1, y:3, color:color`3`});
         
         resolve(currentChoice);
         }
@@ -32,38 +29,38 @@ function getComputerChoice(playerChoice) {
   });
 }
 
-// Function to determine the winner
+// determine and display the winner
 async function determineWinner(playerChoice) {
   const computerChoice = await getComputerChoice(playerChoice); // Await the promise
   
   addText(currentChoice, {x:10, y:5, color:color`3`});
-  addText(playerchoice, {x:1, y:3, color:color`3`});
+  addText("computer: ", {x: 8, y:4, color:color`3`});
+  addText(playerChoice, {x:1, y:3, color:color`3`});
   
   if (playerChoice === computerChoice) {
-    level = 3; // Print tie
-    addText("Tie ", {x: 3, y: 9, color: color`3`});
+    level = 3; 
   } else if (
     (playerChoice === 'rock' && computerChoice === 'scissors') ||
     (playerChoice === 'paper' && computerChoice === 'rock') ||
     (playerChoice === 'scissors' && computerChoice === 'paper')
   ) {
-    level = 2; // Print you win on screen
+    level = 2; 
   } else {
-    level = 1; // Print computer wins on screen
+    level = 1;
     }
   setMap(levels[level]);
   // Create a tune:
     const melody = tune`
 37.92667509481669: B5-37.92667509481669 + A5~37.92667509481669 + G5^37.92667509481669 + F5/37.92667509481669,
-1175.7269279393172`
+1175.7269279393172`;
 
 // Play it:
-    playTune(melody)
+    playTune(melody);
   addText("press k to restart", {x:1, y:13, color:color`3`});
   return 0;
 }
 
-
+//slider movement
 function moveLeft() { // Function for movement when 's' or 'd' key is pressed
   const sprite = getFirst(slider);
     sprite.x -= 2; // move sprite left
@@ -73,9 +70,7 @@ function moveRight() {
   sprite.x += 2; // move sprite right
 }
 
-function print() {
-}
-
+//instructions
 function instructions() {
 addText("Press s for right ", {x:2, y:3, color:color`3`});
 addText("Press a for left ", {x:2, y:4, color:color`3`});
@@ -101,22 +96,22 @@ const slider2 = "a";
 // assign bitmap art to each sprite
 setLegend(
 [ rock, bitmap`
-................
-................
-................
-........00000...
-......00111C00..
-.....001CCCC10..
-.....01C1CC0100.
-.....0CCCCC1110.
-.....0111C1CC10.
-.....0111CC1110.
-...CCC0011C1100.
-...CCCCCCCCCC0..
-...C......000...
-...C............
-................
-................`],
+1111111111111111
+1111111111111111
+1111000000001111
+11110LLLLLL00001
+11100LLLLLL1L001
+1110LLLLLLLLLL00
+1000LLLLLLLLLLL0
+100LLLLLLLLLLLL0
+100LLLLLLLLLLL00
+10LLLLLLLLLLL001
+10LLLLLLLLL00001
+1000000000000111
+1111111111111111
+1111111111111111
+111111111111L111
+1111111111111111`],
 [ paper, bitmap`
 1111111111111111
 1222222222222221
@@ -132,25 +127,25 @@ setLegend(
 1222222222222221
 1222222222222221
 1222222222222221
-1222222222222221
-1111111111111111`],
-[ scissor, bitmap`
-................
-...1........1...
-....1......1....
-....1......1....
-.....1....1.....
-......1..1......
-......1..1......
-.......00.......
-...1111111......
-..11..11111.....
-...11.1.1.1.....
-....1.1.1111....
-...1..11..11....
-...11111........
-................
+1111111111111111
 ................`],
+[ scissor, bitmap`
+...1.........1..
+...1........11..
+...L1......1L...
+....1......1....
+....L1....1L....
+.....L1..1L.....
+......1..1......
+......L00LL.....
+.....LLLLLLL....
+...LLL.L.L.LL...
+...L...L.L..LL..
+..LL...L.LL..LL.
+.LL...LL..L...L.
+.LL...L...LL...L
+..LLLL.....LL..L
+...LL........LL.`],
 [ slider, bitmap`
 ................
 ................
@@ -340,7 +335,7 @@ LLLL.LLLL.L.LLLL
 ................`],  
 );
 
-let playerchoice = 'paper';
+let playerChoice = 'paper';
 let level = 0;
 setSolids([rock, paper, scissor]);
 
@@ -353,19 +348,19 @@ map`
 .......`,
 map`
 .123456
-.......
+.a.....
 .r.p.s.
 ...9...
 .......`,
 map`
 .123456
-.......
+.a.....
 .r.p.s.
 ...8...
 .......`,
 map`
 .123456
-.......
+.a.....
 .r.p.s.
 ...7...
 .......`,
@@ -384,7 +379,7 @@ onInput("s", moveRight);
 // enter
 onInput("j", () => {
   if (level == 0) {
-  determineWinner(playerchoice); }
+  determineWinner(playerChoice); }
   
 });
 
@@ -395,13 +390,10 @@ onInput("k", () => {
   
 });
 
-
 afterInput(() => {
-      const move = tune`
+    const move = tune`
 37.5: C5~37.5 + D5~37.5,
 1162.5`
-
-// Play it:
     playTune(move)
   
     const sprite = getFirst(slider);
@@ -409,12 +401,12 @@ afterInput(() => {
         clearText()
         // Check the position of the slider and update playerchoice accordingly
         if (sprite.x === 1) {
-            playerchoice = 'rock';
+            playerChoice = 'rock';
         } else if (sprite.x === 3) {
-            playerchoice = 'paper';
+            playerChoice = 'paper';
         } else if (sprite.x === 5) {
-            playerchoice = 'scissors';
+            playerChoice = 'scissors';
         }
     }
-  addText(playerchoice, {x:1, y:3, color:color`3`});
+  addText(playerChoice, {x:1, y:3, color:color`3`});
 });
