@@ -1,8 +1,6 @@
 /*
 @title: Rock Paper Scissor
 @author: yash
-@tags: []
-@addedOn: 2024-00-00
 */
 
 // Create a tune:
@@ -21,33 +19,71 @@ const melody = tune`
 playTune(melody).end()
 
 function getComputerChoice() {
-  const choices = ['rock', 'paper', 'scissor'];
-  const randomIndex = Math.floor(Math.random() * choices.length);
-  return choices[randomIndex];
+  const choices = ['rock', 'paper', 'scissors'];
+  const flickerCount = 8;
+  let currentChoice;
+
+  return new Promise((resolve) => {
+    for (let i = 0; i < flickerCount; i++) {
+      setTimeout(() => {
+        currentChoice = choices[Math.floor(Math.random() * choices.length)];
+        console.log("Flickering choice:", currentChoice); // Display the flickering choice
+
+        // On the last iteration, resolve the promise with the final choice
+        if (i === flickerCount - 1) {
+          console.log("Final choice:", currentChoice); // Display the final choice
+          resolve(currentChoice);
+        }
+      }, 300 * i); // Increment the delay for each iteration
+    }
+  });
 }
 
 // Function to determine the winner
-function determineWinner(playerChoice, computerChoice) {
+async function determineWinner(playerChoice) {
+  const computerChoice = await getComputerChoice(); // Await the promise
+  console.log("Player choice:", playerChoice);
+  console.log("Computer choice:", computerChoice);
+  
   if (playerChoice === computerChoice) {
-    level = 3;// print tie
-    addText("Tie ", {x:3, y:9, color:color`3`});
-  }
-  else if (
-        (playerChoice === 'rock' && computerChoice === 'scissor') ||
-      (playerChoice === 'paper' && computerChoice === 'rock') ||
-      (playerChoice === 'scissor' && computerChoice === 'paper')) {
-    level = 2;// print you win on screen
-    addText("You Win", {x:1, y:8, color:color`3`});
-  }
-  else{
-    level = 1;
-    addText("Computer Win", {x:1, y:7, color:color`3`});
+    level = 3; // Print tie
+    addText("Tie ", {x: 3, y: 9, color: color`3`});
+  } else if (
+    (playerChoice === 'rock' && computerChoice === 'scissors') ||
+    (playerChoice === 'paper' && computerChoice === 'rock') ||
+    (playerChoice === 'scissors' && computerChoice === 'paper')
+  ) {
+    level = 2; // Print you win on screen
+    addText("You Win", {x: 1, y: 8, color: color`3`});
+  } else {
+    level = 1; // Print computer wins on screen
+    addText("Computer Wins", {x: 1, y: 7, color: color`3`});
   }
   setMap(levels[level]);
-  addText("Press K to restart ", {x:1, y:4, color:color`3`});
-return 0;
+  addText("Press K to restart", {x: 1, y: 5, color: color`3`});
+  return 0;
 }
 
+
+function moveLeft() { // Function for movement when 's' or 'd' key is pressed
+  const sprite = getFirst(slider);
+    sprite.x -= 2; // move sprite left
+}
+function moveRight() {
+  const sprite = getFirst(slider);
+  sprite.x += 2; // move sprite right
+}
+
+function print() {
+  addText(guess, {x:10, y:4, color:color`3`});
+  addText(playerchoice, {x:1, y:3, color:color`3`});
+}
+
+function instructions() {
+addText("Press s for right ", {x:2, y:3, color:color`3`});
+addText("Press d for left ", {x:2, y:4, color:color`3`});
+addText("Press J to Select ", {x:2, y:13, color:color`3`});
+}
 
 // define the sprites in our game
 const rock = "r";
@@ -307,40 +343,7 @@ LLLL.LLLL.L.LLLL
 ................`],  
 );
 
-function moveLeft() { // Function for movement when 's' or 'd' key is pressed
-  const sprite = getFirst(slider);
-    sprite.x -= 2; // move sprite left
-}
-function moveRight() {
-  const sprite = getFirst(slider);
-  sprite.x += 2; // move sprite right
-}
-
-function print() {
-  addText(guess, {x:1, y:2, color:color`3`});
-  addText(playerchoice, {x:1, y:3, color:color`3`});
-}
-
-function instructions() {
-addText("Press s for right ", {x:2, y:3, color:color`3`});
-addText("Press d for left ", {x:2, y:4, color:color`3`});
-addText("Press J to Select ", {x:2, y:13, color:color`3`});
-}
-
 let playerchoice = 'paper';
-let flickerCount = 0; // Initialize a variable to track the flickering count
-// Flicker the computer's choice before displaying the final choice
-function flickerComputerChoice() {
-  if (flickerCount < 10) { // Flicker 4 times before final choice
-    setTimeout(() => {
-      guess = getComputerChoice(); // Update the guess with a new random choice
-      print(); // Display the flickering choice
-      flickerCount++;
-      flickerComputerChoice(); // Recursively flicker until flickerCount reaches 4
-    }, 500); // Set a delay between flickers (500ms)
-  }
-}
-
 
 let level = 0;
 setSolids([rock, paper, scissor]);
@@ -384,15 +387,12 @@ onInput("s", moveRight);
 
 // enter
 onInput("j", () => {
-    flickerCount = 0; // Reset the flicker count
-    flickerComputerChoice(); // Start the flickering effect
-  determineWinner(playerchoice, guess);
+  determineWinner(playerchoice);
 });
 
 
 //restart
 onInput("k", () => {
-  guess = getComputerChoice();
   setMap(levels[0]);
 });
   
